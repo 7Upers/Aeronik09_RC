@@ -16,14 +16,18 @@ lib/uart.o : lib/uart.c lib/uart.h
 	@echo 'uart'
 	$(CC) $(CFLAGS) -c -o lib/uart.o lib/uart.c
 
+lib/ds18b20.o : lib/ds18b20.c lib/ds18b20.h
+	@echo 'ds18b20'
+	$(CC) $(CFLAGS) -c -o lib/ds18b20.o lib/ds18b20.c
+
 #main
 main.hex : $(TARGET).elf
 	@echo 'converting'
 	$(OBJ2HEX) -R .eeprom -O ihex $(TARGET).elf $(TARGET).hex
 
-main.elf : $(TARGET).o lib/uart.o
+main.elf : $(TARGET).o lib/uart.o lib/ds18b20.o
 	@echo 'linking'
-	$(CC) $(CFLAGS) -o $(TARGET).elf $(TARGET).o lib/uart.o
+	$(CC) $(CFLAGS) -o $(TARGET).elf $(TARGET).o lib/uart.o lib/ds18b20.o
 
 main.o : $(TARGET).c
 	@echo 'compilling'

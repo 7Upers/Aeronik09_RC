@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <avr/io.h>
 #include <util/delay.h>
-#include <avr/interrupt.h>
+#include <string.h>
+
 
 #include "lib/uart.h"
+#include "lib/ds18b20.h"
 
 #define LED PB5
 
@@ -117,14 +119,22 @@ int main (void)
 	//TCCR0B |= (1<<CS00); //set devide 1  FREQ=16MHz
 	OCR0A = 211; //FREQ=75829Hz  - toggle /2 = 37914Hz ~ 38KHz
 
+	double temp = 0;
+	uint8_t skip[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+	uint8_t sensor[8] = {0x28, 0x2d, 0xb2, 0x04, 0x05, 0x00, 0x00, 0x15};
+
 	while (1)
 	{
-		_delay_ms(10000);
-		ir_send((uint8_t *)&acon[0]);
-		printf("%d ir transmitt ON ", n);
-		_delay_ms(10000);
-		ir_send((uint8_t *)&acoff[0]);
-		printf("OFF\r\n");
+//		_delay_ms(10000);
+//		ir_send((uint8_t *)&acon[0]);
+//		printf("%d ir transmitt ON ", n);
+//		_delay_ms(10000);
+//		ir_send((uint8_t *)&acoff[0]);
+//		printf("OFF\r\n");
+		ds18b20_startconvert(skip);
+		temp = ds18b20_gettemp(sensor);
+		printf("Themperature= %3.2lf deg C\r\n", temp);
+		_delay_ms(1000);
 		n++;
 	}
 }
