@@ -16,45 +16,66 @@
 void ir_start(void)
 {
 	IRL;
-	_delay_us(8500);
+	_delay_us(8970);
 	IRH;
-	_delay_us(4250);
+	_delay_us(4450);
 }
 
 void ir_stop(void)
 {
 	IRL;
-	_delay_us(580);
+	_delay_us(670);
 	IRH;
 }
 
 void ir0(void)
 {
 	IRL;
-	_delay_us(560);
+	_delay_us(670);
 	IRH;
-	_delay_us(534);
+	_delay_us(550);
 }
 
 void ir1(void)
 {
 	IRL;
-	_delay_us(560);
+	_delay_us(670);
 	IRH;
-	_delay_us(1600);
+	_delay_us(1622);
+}
+
+void ir_lp(void)
+{
+	//0
+	IRL;
+	_delay_us(670);
+	IRH;
+	_delay_us(550);
+	//1
+	IRL;
+	_delay_us(670);
+	IRH;
+	_delay_us(1622);
+	//LP
+	IRL;
+	_delay_us(670);
+	IRH;
+	_delay_us(19860);
 }
 
 void ir_send(uint8_t *data)
 {
 	ir_start();
-	uint8_t i = 7;
+	uint8_t i = 8;
 	while (i)
 	{
+		//bytes cycle
 		uint8_t currbyte = *data++;
-		uint8_t j = 4;
+		uint8_t j = 8;
 		while (j)
 		{
-			if ((currbyte & 0x08) == 0x08)
+			//bits cycle
+			if ((currbyte & 0x80) == 0x80)
 			{
 				ir1();
 			}
@@ -65,14 +86,18 @@ void ir_send(uint8_t *data)
 			currbyte = currbyte<<1;
 			j--;
 		}
+		if ( i == 5 )
+		{
+			ir_lp();
+		}
 		i--;
 	}
 	ir_stop();
 }
 
 uint8_t n = 0;
-uint8_t acon[7] = {8,8,0,0,3,4,7};
-uint8_t acoff[7] = {8,8,12,0,0,5,1};
+uint8_t acon[8] = {0x90,0x10,0x06,0x0a,0x00,0x04,0x00,0x0b};
+uint8_t acoff[8] = {0x80,0x10,0x06,0x0a,0x00,0x04,0x00,0xa};
 
 int main (void)
 {
