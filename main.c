@@ -42,6 +42,8 @@ int main (void)
 			if ( temp > TCMAX )
 			{
 				aeronik09_on();
+				_delay_ms(1000);
+				aeronik09_on();
 				printf("Aeronik09 ON\r\n");
 				PORTB |= _BV(LED);
 				timer_o = 0;
@@ -53,6 +55,8 @@ int main (void)
 		{
 			if (( timer_w > TWMAX )||( temp < TCMIN ))
 			{
+				aeronik09_off();
+				_delay_ms(1000);
 				aeronik09_off();
 				printf("Aeronik09 OFF ");
 				if ( temp < TCMIN )
