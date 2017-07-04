@@ -5,6 +5,9 @@
 #define IRPORT PORTD
 #define IRLED PD6
 
+//carrier frequency (CFREQ36 = 36kHz, CFREQ38 = 38kHz, any else or CFREQ50 = 50kHz)
+#define CFRE50 1
+
 //#define IRL TCCR0B|=(1<<CS00)
 #define IRL TCCR0A|=_BV(COM0A0); //enable toggle on compare
 //#define IRH TCCR0B&=~(1<<CS00); IRPORT &= ~_BV(IRLED)

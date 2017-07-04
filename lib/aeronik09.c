@@ -101,7 +101,15 @@ void aeronik09_init(void)
 	//	generate carrier frequency
 	TCCR0A |= (1<<WGM01); //CTC mode
 	TCCR0B |= (1<<CS00); //set devide 1  FREQ=16MHz
+#ifdef CFREQ38
 	OCR0A = 211; //FREQ=75829Hz  - toggle /2 = 37914Hz ~ 38KHz
+#else
+#ifdef CFREQ36
+	OCR0A = 222; //FREQ=72072Hz  - toggle /2 = 36036Hz ~ 36KHz
+#else
+	OCR0A = 160; //FREQ=100000Hz  - toggle /2 = 50000Hz = 50KHz
+#endif
+#endif
 	IRH; //disable togle on compare - normal mode, turn off ir led
 }
 
