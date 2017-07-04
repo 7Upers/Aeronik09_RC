@@ -106,7 +106,6 @@ void ir_send(uint8_t *data)
 	ir_stop();
 }
 
-uint8_t n = 0;
 uint8_t acon[8] = {0x90,0x10,0x06,0x0a,0x00,0x04,0x00,0x0b};
 uint8_t acoff[8] = {0x80,0x10,0x06,0x0a,0x00,0x04,0x00,0xa};
 
@@ -120,7 +119,6 @@ int main (void)
 
 	//ir out
 	DDRD |= (1<<IRLED);
-	PORTD |= (1<<IRLED);
 
 	//setup timer
 	//	generate carrier frequency
@@ -128,25 +126,51 @@ int main (void)
 	//TCCR0B |= (1<<CS00); //set devide 1  FREQ=16MHz
 	OCR0A = 211; //FREQ=75829Hz  - toggle /2 = 37914Hz ~ 38KHz
 
+	uint8_t state = 0;
+	unsigned long int timer_o = 24; //frequency of turn on control timer
+	unsigned long int timer_w = 0; //work timer
 	double temp = 0;
 	uint8_t skip[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-	uint8_t sensor[8] = {0x28, 0x2d, 0xb2, 0x04, 0x05, 0x00, 0x00, 0x15};
 
 	while (1)
 	{
-		if (1)
-		{
-			_delay_ms(5000);
-			ir_send((uint8_t *)&acon[0]);
-			printf("%d ir transmitt ON ", n);
-			_delay_ms(5000);
-			ir_send((uint8_t *)&acoff[0]);
-			printf("OFF\r\n");
-		}
 		ds18b20_startconvert(skip);
-		temp = ds18b20_gettemp(sensor);
-		printf("Themperature= %3.2lf deg C\r\n", temp);
+		temp = ds18b20_getsometemp();
+		printf("Themperature= %3.2lf deg C (o=%ld, w=%ld)\r\n", temp, timer_o, timer_w);
+
+		//Включаемся не чаще 1 раза в 40мин.
+		if (( timer_o > 24 )&&( state == 0 ))
+		{
+			if ( temp > 25 )
+			{
+				ir_send((uint8_t *)&acon[0]);
+				printf("Aeronik09 ON\r\n");
+				state = 1;
+			}
+		}
+
+		if ( state == 1 )
+		{
+			if (( timer_w > 12 )||( temp < 23 ))
+			{
+				ir_send((uint8_t *)&acoff[0]);
+				printf("Aeronik09 OFF ");
+				if ( temp < 23 )
+				{
+					printf(" by Temperature exceed\r\n");
+				}
+				else
+				{
+					printf(" by Timer exceed\r\n");
+				}
+				timer_o = 0;
+				timer_w = 0;
+				state = 0;
+			}
+			timer_w++;
+		}
+
+		timer_o++;
 		_delay_ms(1000);
-		n++;
 	}
 }

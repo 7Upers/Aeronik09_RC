@@ -5,6 +5,7 @@ CC = /usr/bin/avr-gcc
 CFLAGS = -Os -Wall -mcall-prologues -mmcu=atmega328p
 #some defines
 CFLAGS += -DF_CPU=$(F_CPU)
+OPTIM = -lm -lprintf_flt -Wl,-u,vfprintf
 OBJ2HEX = /usr/bin/avr-objcopy
 UISP = /usr/bin/avrdude
 FLASHER = arduino
@@ -19,7 +20,7 @@ main.hex : $(TARGET).elf
 
 main.elf : $(TARGET).o lib/uart.o lib/ds18b20.o
 	@echo 'linking'
-	$(CC) $(CFLAGS) -o $(TARGET).elf $(TARGET).o lib/uart.o lib/ds18b20.o
+	$(CC) $(CFLAGS) $(OPTIM) -o $(TARGET).elf $(TARGET).o lib/uart.o lib/ds18b20.o
 
 main.o : $(TARGET).c
 	@echo 'compilling'
