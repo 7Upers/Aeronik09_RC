@@ -15,6 +15,10 @@
 #define IRL TCCR0B|=(1<<CS00)
 #define IRH TCCR0B&=~(1<<CS00)
 
+#define L 670 - 50
+#define H0 550 + 30
+#define H1 1620 + 70
+
 void ir_start(void)
 {
 	IRL;
@@ -33,17 +37,17 @@ void ir_stop(void)
 void ir0(void)
 {
 	IRL;
-	_delay_us(670);
+	_delay_us(L);
 	IRH;
-	_delay_us(550);
+	_delay_us(H0);
 }
 
 void ir1(void)
 {
 	IRL;
-	_delay_us(670);
+	_delay_us(L);
 	IRH;
-	_delay_us(1622);
+	_delay_us(H1);
 }
 
 void ir_lp(void)
@@ -58,6 +62,11 @@ void ir_lp(void)
 	_delay_us(670);
 	IRH;
 	_delay_us(1622);
+	//0
+	IRL;
+	_delay_us(670);
+	IRH;
+	_delay_us(550);
 	//LP
 	IRL;
 	_delay_us(670);
@@ -125,12 +134,15 @@ int main (void)
 
 	while (1)
 	{
-//		_delay_ms(10000);
-//		ir_send((uint8_t *)&acon[0]);
-//		printf("%d ir transmitt ON ", n);
-//		_delay_ms(10000);
-//		ir_send((uint8_t *)&acoff[0]);
-//		printf("OFF\r\n");
+		if (1)
+		{
+			_delay_ms(5000);
+			ir_send((uint8_t *)&acon[0]);
+			printf("%d ir transmitt ON ", n);
+			_delay_ms(5000);
+			ir_send((uint8_t *)&acoff[0]);
+			printf("OFF\r\n");
+		}
 		ds18b20_startconvert(skip);
 		temp = ds18b20_gettemp(sensor);
 		printf("Themperature= %3.2lf deg C\r\n", temp);

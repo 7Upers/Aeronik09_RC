@@ -12,14 +12,6 @@ PORT = /dev/ttyUSB0
 SPEED = 57600
 TARGET = main
 
-lib/uart.o : lib/uart.c lib/uart.h
-	@echo 'uart'
-	$(CC) $(CFLAGS) -c -o lib/uart.o lib/uart.c
-
-lib/ds18b20.o : lib/ds18b20.c lib/ds18b20.h
-	@echo 'ds18b20'
-	$(CC) $(CFLAGS) -c -o lib/ds18b20.o lib/ds18b20.c
-
 #main
 main.hex : $(TARGET).elf
 	@echo 'converting'
@@ -32,6 +24,14 @@ main.elf : $(TARGET).o lib/uart.o lib/ds18b20.o
 main.o : $(TARGET).c
 	@echo 'compilling'
 	$(CC) $(CFLAGS) -c -o $(TARGET).o $(TARGET).c
+
+lib/uart.o : lib/uart.c lib/uart.h
+	@echo 'uart'
+	$(CC) $(CFLAGS) -c -o lib/uart.o lib/uart.c
+
+lib/ds18b20.o : lib/ds18b20.c lib/ds18b20.h
+	@echo 'ds18b20'
+	$(CC) $(CFLAGS) -c -o lib/ds18b20.o lib/ds18b20.c
 
 prog : $(TARGET).hex
 	@echo 'flashing'
