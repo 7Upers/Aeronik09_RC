@@ -171,6 +171,9 @@ uint8_t ds18b20_startconvert(uint8_t *addr)
 	11 bit		375 ms (t conv/2)
 	12 bit		750 ms (t conv)
 */
+
+//don't need wait until conversation in this project
+/*
 	uint8_t ttl = 16; // 16*50ms = 800ms > max time conversion
 	while(!ds18b20_readbit()) //wait until conversion is complete or ttl will be empty
 	{
@@ -181,7 +184,7 @@ uint8_t ds18b20_startconvert(uint8_t *addr)
 		ttl--;
 		_delay_ms(50);
 	}
-
+*/
 	#ifdef DEBUG
 	printf("conversion complete less than %dms\r\n",((16-ttl)*50));
 	#endif
