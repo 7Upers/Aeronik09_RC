@@ -18,9 +18,9 @@ main.hex : $(TARGET).elf
 	@echo 'converting'
 	$(OBJ2HEX) -R .eeprom -O ihex $(TARGET).elf $(TARGET).hex
 
-main.elf : $(TARGET).o lib/uart.o lib/ds18b20.o
+main.elf : $(TARGET).o lib/uart.o lib/ds18b20.o lib/aeronik09.o
 	@echo 'linking'
-	$(CC) $(CFLAGS) $(OPTIM) -o $(TARGET).elf $(TARGET).o lib/uart.o lib/ds18b20.o
+	$(CC) $(CFLAGS) $(OPTIM) -o $(TARGET).elf $(TARGET).o lib/uart.o lib/ds18b20.o lib/aeronik09.o
 
 main.o : $(TARGET).c
 	@echo 'compilling'
@@ -33,6 +33,10 @@ lib/uart.o : lib/uart.c lib/uart.h
 lib/ds18b20.o : lib/ds18b20.c lib/ds18b20.h
 	@echo 'ds18b20'
 	$(CC) $(CFLAGS) -c -o lib/ds18b20.o lib/ds18b20.c
+
+lib/aeronik09.o : lib/aeronik09.c lib/aeronik09.h
+	@echo 'aeronik09'
+	$(CC) $(CFLAGS) -c -o lib/aeronik09.o lib/aeronik09.c
 
 prog : $(TARGET).hex
 	@echo 'flashing'
