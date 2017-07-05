@@ -22,7 +22,7 @@ int main (void)
 	DDRB |= (1<<LED);
 	PORTD &= ~(1<<LED);
 
-	aeronik09_init();
+	AC_INIT;
 
 	uint8_t state = 0; //air condition 0 - turned off, 1 - turned on
 	unsigned long int timer_o = TOMAX; //frequency of turn on control timer
@@ -41,9 +41,9 @@ int main (void)
 		{
 			if ( temp > TCMAX )
 			{
-				aeronik09_on();
+				AC_ON;
 				_delay_ms(1000);
-				aeronik09_on();
+				AC_ON;
 				printf("Aeronik09 ON\r\n");
 				PORTB |= _BV(LED);
 				timer_o = 0;
@@ -55,9 +55,9 @@ int main (void)
 		{
 			if (( timer_w > TWMAX )||( temp < TCMIN ))
 			{
-				aeronik09_off();
+				AC_OFF;
 				_delay_ms(1000);
-				aeronik09_off();
+				AC_OFF;
 				printf("Aeronik09 OFF ");
 				if ( temp < TCMIN )
 				{

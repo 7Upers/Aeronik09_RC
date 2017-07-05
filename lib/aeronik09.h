@@ -1,12 +1,16 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+#define AC_INIT aeronik09_init()
+#define AC_ON aeronik09_on()
+#define AC_OFF aeronik09_off()
+
 #define IRDDR DDRD
 #define IRPORT PORTD
 #define IRLED PD6
 
 //carrier frequency (CFREQ36 = 36kHz, CFREQ38 = 38kHz, any else or CFREQ50 = 50kHz)
-#define CFREQ50 1
+#define CFREQ38 1
 
 //#define IRL TCCR0B|=(1<<CS00)
 #define IRL TCCR0A|=_BV(COM0A0); //enable toggle on compare
