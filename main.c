@@ -9,8 +9,8 @@
 #include "lib/aeronik09.h"
 
 #define LED PB5
-#define TOMAX 2400 //period of turn on air conditioner, 1 time peer 40min
-#define TWMAX 1200 //max time of work air conditioner 20min
+#define TOMAX 240 //period of turn on air conditioner, 1 time peer 40min
+#define TWMAX 120 //max time of work air conditioner 20min
 #define TCMAX 26 //max temperature of celsium degrees, after thet need turn on air conditioner
 #define TCMIN 23 //min temperature of celsium degrees, after thet need turn off air conditioner
 
@@ -75,7 +75,7 @@ int main (void)
 		}
 
 		timer_o++;
-		_delay_ms(400);
+		_delay_ms(4000);
 		//in real each cycle will be freq 1Hz (1time peer sec)
 	}
 }
